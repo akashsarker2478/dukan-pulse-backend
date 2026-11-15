@@ -1,0 +1,44 @@
+model Order {
+  id              String        @id @default(uuid())
+  invoiceNumber   String        @unique @map("invoice_number")
+  subTotal        Decimal       @db.Decimal(10, 2) @map("sub_total")
+  discount        Decimal       @default(0) @db.Decimal(10, 2)
+  vatAmount       Decimal       @default(0) @db.Decimal(10, 2) @map("vat_amount")
+  totalAmount     Decimal       @db.Decimal(10, 2) @map("total_amount")
+  paidAmount      Decimal       @db.Decimal(10, 2) @map("paid_amount")
+  dueAmount       Decimal       @default(0) @db.Decimal(10, 2) @map("due_amount")
+  dueDate         DateTime?     @map("due_date")
+  paymentMethod   PaymentMethod @default(CASH) @map("payment_method")
+  status          OrderStatus   @default(COMPLETED)
+  customerName    String?       @map("customer_name")
+  customerPhone   String?       @map("customer_phone")
+  storeId         String        @map("store_id")
+  createdById     String        @map("created_by_id")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  store           Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  createdBy       User          @relation(fields: [createdById], references: [id])
+  orderItems      OrderItem[]
+
+  @@map("orders")
+}
+
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String   @map("order_id")
+  productId   String   @map("product_id")
+  quantity    Int
+  unitPrice   Decimal  @db.Decimal(10, 2) @map("unit_price")
+  totalPrice  Decimal  @db.Decimal(10, 2) @map("total_price")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}

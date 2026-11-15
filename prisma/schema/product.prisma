@@ -1,0 +1,21 @@
+model Product {
+  id                  String      @id @default(uuid())
+  name                String
+  description         String?
+  sku                 String      @unique
+  buyPrice            Decimal     @db.Decimal(10, 2)
+  sellPrice           Decimal     @db.Decimal(10,2)
+  stock               Int         @default(0)
+  lowStockThreshold   Int         @default(5)
+  storeId             String
+  categoryId          String
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  store               Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  category            Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  orderItems          OrderItem[]
+
+  @@map("products")
+}

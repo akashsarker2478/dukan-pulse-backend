@@ -1,0 +1,13 @@
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  storeId     String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  products    Product[]
+
+  @@map("categories")
+}

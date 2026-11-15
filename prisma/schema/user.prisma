@@ -1,0 +1,19 @@
+//user schema
+model User {
+    id            String         @id @default(uuid())
+    name          String
+    email         String         @unique
+    password      String
+    phone         String
+    role          UserRole       @default(MERCHANT)
+    status        UserStatus     @default(PENDING)
+    storeId       String?
+    store         Store?         @relation("StoreStaff", fields: [storeId], references: [id])
+    ownedStores   Store[]        @relation("StoreOwner")
+    orders        Order[]
+    notifications Notification[]
+    createdAt     DateTime       @default(now()) @map("created_at")
+    updatedAt     DateTime       @updatedAt @map("updated_at")
+
+    @@map("users")
+}

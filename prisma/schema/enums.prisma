@@ -1,0 +1,30 @@
+enum UserRole{
+    SUPER_ADMIN
+    MERCHANT
+    STAFF
+}
+
+enum UserStatus{
+    PENDING
+    ACTIVE
+    BLOCKED
+}
+
+enum StoreStatus{
+    PENDING
+    ACTIVE
+    BLOCKED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  MOBILE_BANKING
+  due
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
