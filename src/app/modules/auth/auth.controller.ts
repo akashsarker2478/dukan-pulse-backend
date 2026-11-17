@@ -16,6 +16,17 @@ const registerMerchant = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const loginMerchant =catchAsync(async(req:Request,res:Response)=>{
+    const result = await authService.loginMerchantIntoDB(req.body);
+    sendResponse(res,{
+        statusCode:httpStatus.OK,
+        success:true,
+        message:"Merchant logged in successfully!",
+        data:result
+    })
+})
+
 export const authController = {
   registerMerchant,
+  loginMerchant
 };
