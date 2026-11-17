@@ -1,7 +1,7 @@
 model Store {
     id         String      @id @default(uuid())
     name       String
-    address    String
+    address    String?
     phone      String
     status     StoreStatus @default(PENDING)
     ownerId    String

@@ -24,7 +24,7 @@ async function main() {
       status: UserStatus.ACTIVE,
     },
   });
-  console.log(`✅ Super admin created: ${admin.email}`);
+  console.log(`Super admin created: ${admin.email}`);
 }
 main()
   .catch((e) => {
