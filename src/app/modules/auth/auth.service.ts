@@ -2,6 +2,8 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../../lib/prisma";
 import { ILoginPayload, IRegisterMerchantPayload } from "./auth.interface";
 import { UserRole, UserStatus } from "../../../../generated/prisma/enums";
+import { jwtHelper } from "../../../shared/jwtHelper";
+import config from "../../../config";
 
 const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
   const { name, email, password, phone, storeName } = payload;
@@ -71,28 +73,37 @@ const loginMerchantIntoDB = async (payload: ILoginPayload) => {
     throw new Error("Invalid email or password!");
   }
 
-  if (user.status === "PENDING") {
+  if (user.status === UserStatus.PENDING) {
     throw new Error("Your account is pending admin approval. Please wait.");
   }
 
-  if (user.status === "BLOCKED") {
+  if (user.status === UserStatus.BLOCKED) {
     throw new Error(
       "Your account has been deactivated. Please contact support.",
     );
   }
+const tokenPayload = {
+  id : user.id,
+  email : user.email,
+  role : user.role,
+  storeId : user.storeId
+};
 
-  const userWithoutPassword = await prisma.user.findUnique({
-    where: { email },
-    omit: {
-      password: true,
-    },
-    include: {
-      store: true,
-    },
-  });
-  return {
-    user: userWithoutPassword
-  }
+const accessToken = jwtHelper.generateToken(
+  tokenPayload,
+  config.jwt_access_secret,
+  config.jwt_access_expires_in
+);
+
+const refreshToken = jwtHelper.generateToken(
+  tokenPayload,
+  config.jwt_refresh_secret,
+  config.jwt_refresh_expires_in
+);
+
+const {password: _password, ...userWithoutPassword} = user;
+return {user:userWithoutPassword,accessToken,refreshToken}
+
 };
 
 export const authService = {

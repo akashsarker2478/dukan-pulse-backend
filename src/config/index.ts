@@ -6,7 +6,7 @@ export default{
     port: process.env.PORT || 3000,
     database_url: process.env.DATABASE_URL,
     app_url: process.env.APP_URL,
-    // node_env: process.env.NODE_ENV || "development",
+    node_env: process.env.NODE_ENV || "development",
     bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
     jwt_access_secret: process.env.JWT_ACCESS_SECRET!,
     jwt_refresh_secret: process.env.JWT_REFRESH_SECRET!,
