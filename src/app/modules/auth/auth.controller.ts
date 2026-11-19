@@ -21,6 +21,12 @@ const loginMerchant =catchAsync(async(req:Request,res:Response)=>{
     const result = await authService.loginMerchantIntoDB(req.body);
     const {accessToken,refreshToken,user} = result;
 
+    res.cookie("accessToken",accessToken,{
+      secure:config.node_env === "production",
+      httpOnly:true,
+      sameSite: config.node_env === "production" ? "none" : "strict",
+      maxAge:15 * 60 * 1000, //15min
+    })
     res.cookie("refreshToken",refreshToken,{
       secure:config.node_env === "production",
       httpOnly:true,

@@ -3,6 +3,8 @@ import { authRouter } from "./app/modules/auth/auth.route";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import config from "./config";
+import { notFound } from "./app/middlewares/nouFound";
+import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 
 const app: Application = express();
 
@@ -23,5 +25,10 @@ app.get("/", (req: Request, res: Response) => {
 
 //routes
 app.use("/api/v1/auth", authRouter);
+
+//not found middleware
+app.use(notFound)
+//global error handler middleware
+app.use(globalErrorHandler)
 
 export default app;

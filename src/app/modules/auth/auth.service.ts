@@ -4,6 +4,8 @@ import { ILoginPayload, IRegisterMerchantPayload } from "./auth.interface";
 import { UserRole, UserStatus } from "../../../../generated/prisma/enums";
 import { jwtHelper } from "../../../shared/jwtHelper";
 import config from "../../../config";
+import ApiError from "../../../shared/apiError";
+import  HttpStatus  from "http-status";
 
 const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
   const { name, email, password, phone, storeName } = payload;
@@ -12,7 +14,7 @@ const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
     where: { email },
   });
   if (existingUser) {
-    throw new Error("User with this email already exists!");
+    throw new ApiError(HttpStatus.CONFLICT, "User with this email already exists!");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -65,7 +67,7 @@ const loginMerchantIntoDB = async (payload: ILoginPayload) => {
     },
   });
   if (!user) {
-    throw new Error("Invalid email or password!");
+    throw new ApiError(HttpStatus.UNAUTHORIZED, "Invalid email or password!");
   }
 
   const isPasswordMatched = await bcrypt.compare(password, user.password);
@@ -74,13 +76,11 @@ const loginMerchantIntoDB = async (payload: ILoginPayload) => {
   }
 
   if (user.status === UserStatus.PENDING) {
-    throw new Error("Your account is pending admin approval. Please wait.");
+    throw new ApiError(HttpStatus.FORBIDDEN, "Your account is pending admin approval. Please wait.");
   }
 
   if (user.status === UserStatus.BLOCKED) {
-    throw new Error(
-      "Your account has been deactivated. Please contact support.",
-    );
+    throw new ApiError(HttpStatus.FORBIDDEN, "Your account has been deactivated. Please contact support.");
   }
 const tokenPayload = {
   id : user.id,
