@@ -3,8 +3,9 @@ import { authRouter } from "./app/modules/auth/auth.route";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import config from "./config";
-import { notFound } from "./app/middlewares/nouFound";
+import { notFound } from "./app/middlewares/notFound";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
+import { adminRoutes } from "./app/modules/admin/admin.route";
 
 const app: Application = express();
 
@@ -25,6 +26,7 @@ app.get("/", (req: Request, res: Response) => {
 
 //routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/admin",adminRoutes);
 
 //not found middleware
 app.use(notFound)

@@ -33,7 +33,6 @@
 * **notifications:** Unified notification center for store requests, approval updates, due alerts, and low-stock warnings.
 
 ---
-
 ## 📡 Implemented API Endpoints
 
 **Base URL:** `/api/v1`
@@ -41,6 +40,10 @@
 ### **Authentication (`/api/v1/auth`)**
 - `POST /api/v1/auth/register-merchant` - Register a new merchant account and initialize store
 - `POST /api/v1/auth/login` - Authenticate user and issue Access & Refresh tokens
+
+### **Admin Moderation (`/api/v1/admin`)**
+- `GET /api/v1/admin/merchants` - Retrieve all merchants with optional status filtering (`?status=PENDING|ACTIVE|BLOCKED`) *(Super Admin only)*
+- `PATCH /api/v1/admin/merchants/:id/status` - Approve (`ACTIVE`) or block (`BLOCKED`) a merchant and synchronize their store status *(Super Admin only)*
 
 ---
 
