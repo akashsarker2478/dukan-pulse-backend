@@ -45,11 +45,6 @@ const updateMerchantStatusIntoDB =async (id:string, status:UserStatus)=>{
                 where:{ownerId: id ,status: StoreStatus.PENDING},
                 data:{status:StoreStatus.ACTIVE}
             })
-        }else{
-            await tx.store.updateMany({
-                where:{ownerId:id},
-                data:{status:StoreStatus.BLOCKED}
-            });
         }
 
         return updatedMerchant;

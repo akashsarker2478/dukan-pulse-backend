@@ -6,6 +6,7 @@ import { jwtHelper } from "../../../shared/jwtHelper";
 import config from "../../../config";
 import ApiError from "../../../shared/apiError";
 import  HttpStatus  from "http-status";
+import { assertStoreAccessible } from "../../../shared/storeAccess";
 
 const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
   const { name, email, password, phone, storeName } = payload;
@@ -82,6 +83,11 @@ const loginMerchantIntoDB = async (payload: ILoginPayload) => {
   if (user.status === UserStatus.BLOCKED) {
     throw new ApiError(HttpStatus.FORBIDDEN, "Your account has been deactivated. Please contact support.");
   }
+// TODO: staff API বানানোর পর এই ব্লকটা চালু করতে হবে
+//   if (user.role === UserRole.STAFF && user.storeId) {
+//   await assertStoreAccessible(user.storeId);
+// }
+
 const tokenPayload = {
   id : user.id,
   email : user.email,
