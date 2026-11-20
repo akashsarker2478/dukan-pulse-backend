@@ -40,6 +40,8 @@
 ### **Authentication (`/api/v1/auth`)**
 - `POST /api/v1/auth/register-merchant` - Register a new merchant account and initialize store
 - `POST /api/v1/auth/login` - Authenticate user and issue Access & Refresh tokens
+- `GET /api/v1/auth/me` - Get user profile route.
+-  `POST /api/v1/auth/logout`- user logout api. 
 
 ### **Admin Moderation (`/api/v1/admin`)**
 - `GET /api/v1/admin/merchants` - Retrieve all merchants with optional status filtering (`?status=PENDING|ACTIVE|BLOCKED`) *(Super Admin only)*

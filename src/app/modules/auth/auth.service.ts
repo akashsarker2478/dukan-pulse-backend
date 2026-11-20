@@ -5,7 +5,7 @@ import { UserRole, UserStatus } from "../../../../generated/prisma/enums";
 import { jwtHelper } from "../../../shared/jwtHelper";
 import config from "../../../config";
 import ApiError from "../../../shared/apiError";
-import  HttpStatus  from "http-status";
+import  httpStatus  from "http-status";
 
 //merchant register
 const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
@@ -15,7 +15,7 @@ const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
     where: { email },
   });
   if (existingUser) {
-    throw new ApiError(HttpStatus.CONFLICT, "User with this email already exists!");
+    throw new ApiError(httpStatus.CONFLICT, "User with this email already exists!");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -61,7 +61,7 @@ const loginMerchantIntoDB = async (payload: ILoginPayload) => {
     },
   });
   if (!user) {
-    throw new ApiError(HttpStatus.UNAUTHORIZED, "Invalid email or password!");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid email or password!");
   }
 
   const isPasswordMatched = await bcrypt.compare(password, user.password);
@@ -70,11 +70,11 @@ const loginMerchantIntoDB = async (payload: ILoginPayload) => {
   }
 
   if (user.status === UserStatus.PENDING) {
-    throw new ApiError(HttpStatus.FORBIDDEN, "Your account is pending admin approval. Please wait.");
+    throw new ApiError(httpStatus.FORBIDDEN, "Your account is pending admin approval. Please wait.");
   }
 
   if (user.status === UserStatus.BLOCKED) {
-    throw new ApiError(HttpStatus.FORBIDDEN, "Your account has been deactivated. Please contact support.");
+    throw new ApiError(httpStatus.FORBIDDEN, "Your account has been deactivated. Please contact support.");
   }
 // TODO: staff API বানানোর পর এই ব্লকটা চালু করতে হবে
 //   if (user.role === UserRole.STAFF && user.storeId) {
@@ -111,10 +111,14 @@ const getMe = async(userid : string)=>{
     where:{id: userid},
     omit:{
       password : true
-    }
+    },
+    include:{
+      store : true,
+      ownedStores: true
+    },
   })
   if(!user){
-    throw new ApiError(HttpStatus.NOT_FOUND,"user not found")
+    throw new ApiError(httpStatus.NOT_FOUND,"user not found")
   }
 
   return user;
