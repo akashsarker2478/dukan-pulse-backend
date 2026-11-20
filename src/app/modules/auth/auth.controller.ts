@@ -4,6 +4,7 @@ import { authService } from "./auth.service";
 import { sendResponse } from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import config from "../../../config";
+import { setAuthCookies } from "../../../shared/cookie";
 
 const registerMerchant = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.registerMerchantIntoDB(req.body);
@@ -21,18 +22,7 @@ const loginMerchant =catchAsync(async(req:Request,res:Response)=>{
     const result = await authService.loginMerchantIntoDB(req.body);
     const {accessToken,refreshToken,user} = result;
 
-    res.cookie("accessToken",accessToken,{
-      secure:config.node_env === "production",
-      httpOnly:true,
-      sameSite: config.node_env === "production" ? "none" : "strict",
-      maxAge:15 * 60 * 1000, //15min
-    })
-    res.cookie("refreshToken",refreshToken,{
-      secure:config.node_env === "production",
-      httpOnly:true,
-      sameSite: config.node_env === "production" ? "none" : "strict",
-      maxAge:7 * 24 * 60 * 60 * 1000, //7day
-    })
+  setAuthCookies(res,{accessToken,refreshToken});
 
     sendResponse(res,{
         statusCode:httpStatus.OK,
@@ -45,7 +35,19 @@ const loginMerchant =catchAsync(async(req:Request,res:Response)=>{
     })
 })
 
+const getMe = catchAsync(async(req: Request, res: Response)=>{
+  const userId = req.user?.id;
+  const result = await authService.getMe(userId as string)
+  sendResponse(res,{
+    statusCode: 200,
+    success: true,
+    message: "User profile retrieved successfully",
+    data: result,
+  })
+});
+
 export const authController = {
   registerMerchant,
-  loginMerchant
+  loginMerchant,
+  getMe
 };

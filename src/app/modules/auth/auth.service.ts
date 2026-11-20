@@ -6,8 +6,8 @@ import { jwtHelper } from "../../../shared/jwtHelper";
 import config from "../../../config";
 import ApiError from "../../../shared/apiError";
 import  HttpStatus  from "http-status";
-import { assertStoreAccessible } from "../../../shared/storeAccess";
 
+//merchant register
 const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
   const { name, email, password, phone, storeName } = payload;
 
@@ -30,16 +30,9 @@ const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
         role: UserRole.MERCHANT,
         status: UserStatus.PENDING,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        role: true,
-        status: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+     omit:{
+      password : true
+     }
     });
 
     const newStore = await tx.store.create({
@@ -57,7 +50,7 @@ const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
   });
   return result;
 };
-
+//merchant login
 const loginMerchantIntoDB = async (payload: ILoginPayload) => {
   const { email, password } = payload;
 
@@ -112,7 +105,24 @@ return {user:userWithoutPassword,accessToken,refreshToken}
 
 };
 
+//get me
+const getMe = async(userid : string)=>{
+  const user = await prisma.user.findUnique({
+    where:{id: userid},
+    omit:{
+      password : true
+    }
+  })
+  if(!user){
+    throw new ApiError(HttpStatus.NOT_FOUND,"user not found")
+  }
+
+  return user;
+}
+
+
 export const authService = {
   registerMerchantIntoDB,
   loginMerchantIntoDB,
+  getMe,
 };

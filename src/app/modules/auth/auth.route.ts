@@ -13,8 +13,6 @@ router.post("/login",
     authController.loginMerchant
 )
 
-router.get("/me", auth(), (req, res) => {
-  res.json({ success: true, data: req.user });
-});
+router.get("/me", auth(),authController.getMe);
 
 export const authRouter = router;
