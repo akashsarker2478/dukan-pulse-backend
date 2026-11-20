@@ -5,6 +5,7 @@ import { sendResponse } from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import config from "../../../config";
 import { clearAuthCookies, setAuthCookies } from "../../../shared/cookie";
+import ApiError from "../../../shared/apiError";
 
 const registerMerchant = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.registerMerchantIntoDB(req.body);
@@ -56,9 +57,26 @@ const logOut = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const token = req.cookies?.refreshToken;
+  if (!token) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Refresh token not found!");
+  }
+
+  const { accessToken } = await authService.refreshToken(token);
+  setAuthCookies(res,{accessToken})
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Access token refreshed successfully!",
+    data: null,
+  });
+});
+
 export const authController = {
   registerMerchant,
   loginMerchant,
   getMe,
-  logOut
+  logOut,
+  refreshToken
 };

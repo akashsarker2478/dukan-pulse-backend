@@ -5,7 +5,7 @@ import { UserRole, UserStatus } from "../../../../generated/prisma/enums";
 import { jwtHelper } from "../../../shared/jwtHelper";
 import config from "../../../config";
 import ApiError from "../../../shared/apiError";
-import  httpStatus  from "http-status";
+import httpStatus from "http-status";
 
 //merchant register
 const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
@@ -15,7 +15,10 @@ const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
     where: { email },
   });
   if (existingUser) {
-    throw new ApiError(httpStatus.CONFLICT, "User with this email already exists!");
+    throw new ApiError(
+      httpStatus.CONFLICT,
+      "User with this email already exists!",
+    );
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -30,9 +33,9 @@ const registerMerchantIntoDB = async (payload: IRegisterMerchantPayload) => {
         role: UserRole.MERCHANT,
         status: UserStatus.PENDING,
       },
-     omit:{
-      password : true
-     }
+      omit: {
+        password: true,
+      },
     });
 
     const newStore = await tx.store.create({
@@ -70,63 +73,102 @@ const loginMerchantIntoDB = async (payload: ILoginPayload) => {
   }
 
   if (user.status === UserStatus.PENDING) {
-    throw new ApiError(httpStatus.FORBIDDEN, "Your account is pending admin approval. Please wait.");
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      "Your account is pending admin approval. Please wait.",
+    );
   }
 
   if (user.status === UserStatus.BLOCKED) {
-    throw new ApiError(httpStatus.FORBIDDEN, "Your account has been deactivated. Please contact support.");
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      "Your account has been deactivated. Please contact support.",
+    );
   }
-// TODO: staff API বানানোর পর এই ব্লকটা চালু করতে হবে
-//   if (user.role === UserRole.STAFF && user.storeId) {
-//   await assertStoreAccessible(user.storeId);
-// }
+  // TODO: staff API বানানোর পর এই ব্লকটা চালু করতে হবে
+  //   if (user.role === UserRole.STAFF && user.storeId) {
+  //   await assertStoreAccessible(user.storeId);
+  // }
 
-const tokenPayload = {
-  id : user.id,
-  email : user.email,
-  role : user.role,
-  storeId : user.storeId
-};
+  const tokenPayload = {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    storeId: user.storeId,
+  };
 
-const accessToken = jwtHelper.generateToken(
-  tokenPayload,
-  config.jwt_access_secret,
-  config.jwt_access_expires_in
-);
+  const accessToken = jwtHelper.generateToken(
+    tokenPayload,
+    config.jwt_access_secret,
+    config.jwt_access_expires_in,
+  );
 
-const refreshToken = jwtHelper.generateToken(
-  tokenPayload,
-  config.jwt_refresh_secret,
-  config.jwt_refresh_expires_in
-);
+  const refreshToken = jwtHelper.generateToken(
+    tokenPayload,
+    config.jwt_refresh_secret,
+    config.jwt_refresh_expires_in,
+  );
 
-const {password: _password, ...userWithoutPassword} = user;
-return {user:userWithoutPassword,accessToken,refreshToken}
-
+  const { password: _password, ...userWithoutPassword } = user;
+  return { user: userWithoutPassword, accessToken, refreshToken };
 };
 
 //get me
-const getMe = async(userid : string)=>{
+const getMe = async (userid: string) => {
   const user = await prisma.user.findUnique({
-    where:{id: userid},
-    omit:{
-      password : true
+    where: { id: userid },
+    omit: {
+      password: true,
     },
-    include:{
-      store : true,
-      ownedStores: true
+    include: {
+      store: true,
+      ownedStores: true,
     },
-  })
-  if(!user){
-    throw new ApiError(httpStatus.NOT_FOUND,"user not found")
+  });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "user not found");
   }
 
   return user;
-}
+};
 
+//refresh Token
+const refreshToken = async (token: string) => {
+  let decoded;
+  try {
+    decoded = jwtHelper.verifyToken(token, config.jwt_refresh_secret);
+  } catch {
+    throw new ApiError(
+      httpStatus.UNAUTHORIZED,
+      "Invalid or expired refresh token!",
+    );
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: decoded.id },
+  });
+
+  if (!user || user.status !== UserStatus.ACTIVE) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Your account is not active!");
+  }
+
+  const accessToken = jwtHelper.generateToken(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      storeId: user.storeId,
+    },
+    config.jwt_access_secret,
+    config.jwt_access_expires_in,
+  );
+
+  return { accessToken };
+};
 
 export const authService = {
   registerMerchantIntoDB,
   loginMerchantIntoDB,
   getMe,
+  refreshToken
 };
