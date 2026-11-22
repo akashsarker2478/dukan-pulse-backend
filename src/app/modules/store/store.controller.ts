@@ -32,7 +32,23 @@ const getMyStores = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateStore = catchAsync(async(req: Request, res: Response)=>{
+    const userId = req.user?.id as string;
+    const storeId = req.params.id as string;
+    const payload = req.body;
+    const result = await storeService.updateStoreIntoDB(userId,storeId,payload)
+
+    sendResponse(res,{
+        statusCode : httpStatus.OK,
+        success : true,
+        message : "Store settings update successfully",
+        data : result
+    })
+})
+
 export const storeController = {
   createStore,
   getMyStores,
+  updateStore
 };
+

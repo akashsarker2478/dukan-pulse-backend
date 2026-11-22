@@ -12,6 +12,12 @@ validationRequest(storeValidation.createStoreZodSchema),
 storeController.createStore
 );
 
-router.get("/my",auth(UserRole.MERCHANT),storeController.getMyStores)
+router.get("/my",auth(UserRole.MERCHANT),storeController.getMyStores);
+
+router.patch("/:id",
+    auth(UserRole.MERCHANT),
+    validationRequest(storeValidation.updateStoreZodSchema),
+    storeController.updateStore
+)
 
 export const storeRoutes = router;
