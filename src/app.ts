@@ -6,6 +6,7 @@ import config from "./config";
 import { notFound } from "./app/middlewares/notFound";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import { adminRoutes } from "./app/modules/admin/admin.route";
+import { storeRoutes } from "./app/modules/store/store.route";
 
 const app: Application = express();
 
@@ -27,6 +28,7 @@ app.get("/", (req: Request, res: Response) => {
 //routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/admin",adminRoutes);
+app.use("/api/v1/stores",storeRoutes)
 
 //not found middleware
 app.use(notFound)

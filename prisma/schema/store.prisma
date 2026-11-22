@@ -1,17 +1,21 @@
 model Store {
-    id         String      @id @default(uuid())
-    name       String
-    address    String?
-    phone      String
-    status     StoreStatus @default(PENDING)
-    ownerId    String
-    createdAt  DateTime    @default(now()) @map("created_at")
-    updatedAt  DateTime    @default(now()) @map("updated_at")
+    id           String      @id @default(uuid())
+    name         String
+    address      String?
+    phone        String
+    logo         String?
+    businessType StoreType   @default(OTHER) @map("business_type")
+    vatRate      Decimal     @default(0) @map("vat_rate") @db.Decimal(5, 2)
+    status       StoreStatus @default(PENDING)
+    ownerId      String
+    createdAt    DateTime    @default(now()) @map("created_at")
+    updatedAt    DateTime    @updatedAt @map("updated_at")
     //relations
-    owner      User        @relation("StoreOwner", fields: [ownerId], references: [id])
-    staffs     User[]       @relation("StoreStaff")
-    categories Category[]
-    products   Product[]
-    orders     Order[]
+    owner        User        @relation("StoreOwner", fields: [ownerId], references: [id])
+    staffs       User[]      @relation("StoreStaff")
+    categories   Category[]
+    products     Product[]
+    orders       Order[]
+
     @@map("stores")
 }

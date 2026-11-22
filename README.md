@@ -44,12 +44,13 @@
 - `POST /api/v1/auth/refresh-token` — Verifies the `refreshToken` cookie, checks user account status, and issues a new `accessToken` cookie.
 - `POST /api/v1/auth/logout` — Clears `accessToken` and `refreshToken` cookies to log out the user.
 
+### **Store Management (`/api/v1/stores`)**
+- `POST /api/v1/stores` - Submit a new store creation request (`status: PENDING`) *(Merchant only)*
+- `GET /api/v1/stores/my` - Retrieve logged-in merchant's stores with optional status filtering (`?status=PENDING|ACTIVE|BLOCKED`) *(Merchant only)*
+
 ### **Admin Moderation (`/api/v1/admin`)**
 - `GET /api/v1/admin/merchants` - Retrieve all merchants with optional status filtering (`?status=PENDING|ACTIVE|BLOCKED`) *(Super Admin only)*
 - `PATCH /api/v1/admin/merchants/:id/status` - Approve (`ACTIVE`) or block (`BLOCKED`) a merchant and synchronize their store status *(Super Admin only)*
-
----
-
 ## 📂 Project Structure
 
 ```text

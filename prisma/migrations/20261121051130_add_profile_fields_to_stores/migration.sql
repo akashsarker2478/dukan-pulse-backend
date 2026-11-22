@@ -1,0 +1,7 @@
+-- CreateEnum
+CREATE TYPE "StoreType" AS ENUM ('GROCERY', 'PHARMACY', 'COSMETICS', 'HARDWARE', 'ELECTRONICS', 'CLOTHING', 'OTHER');
+
+-- AlterTable
+ALTER TABLE "stores" ADD COLUMN     "business_type" "StoreType" NOT NULL DEFAULT 'OTHER',
+ADD COLUMN     "logo" TEXT,
+ADD COLUMN     "vat_rate" DECIMAL(5,2) NOT NULL DEFAULT 0;

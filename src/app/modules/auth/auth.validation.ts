@@ -29,7 +29,7 @@ const registerZodSchema = z.object({
             ? "phone number is required"
             : "invalid phone number",
       })
-      .min(11, { error: "phone number must be eleven digits" }),
+      .regex(/^\d{11}$/, { error: "Phone number must be exactly 11 digits" }),
 
     storeName: z
       .string({

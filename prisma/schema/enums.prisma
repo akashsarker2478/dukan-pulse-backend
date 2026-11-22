@@ -28,3 +28,13 @@ enum OrderStatus {
   COMPLETED
   CANCELLED
 }
+
+enum StoreType {
+  GROCERY
+  PHARMACY
+  COSMETICS
+  HARDWARE
+  ELECTRONICS
+  CLOTHING
+  OTHER
+}
