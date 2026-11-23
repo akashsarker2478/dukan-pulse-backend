@@ -58,8 +58,20 @@ const updateStoreIntoDB = async(userId:string, storeId:string, payload:Partial<I
     return updatedStore;
 }
 
+const getSingleStoreIntoDB = async(storeId : string, ownerId: string)=>{
+  const store = await prisma.store.findUnique({
+    where:{id: storeId,ownerId}
+  })
+
+   if (!store) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Store not found");
+  }
+  return store;
+}
+
 export const storeService = {
   createStoreIntoDB,
   getMyStoreIntoDB,
-  updateStoreIntoDB
+  updateStoreIntoDB,
+  getSingleStoreIntoDB,
 };

@@ -6,18 +6,25 @@ import validationRequest from "../../middlewares/validateRequest";
 import { storeController } from "./store.controller";
 
 const router = Router();
-router.post("/",
-auth(UserRole.MERCHANT),
-validationRequest(storeValidation.createStoreZodSchema),
-storeController.createStore
+//create store
+router.post(
+  "/",
+  auth(UserRole.MERCHANT),
+  validationRequest(storeValidation.createStoreZodSchema),
+  storeController.createStore,
 );
 
-router.get("/my",auth(UserRole.MERCHANT),storeController.getMyStores);
+//get my store
+router.get("/my", auth(UserRole.MERCHANT), storeController.getMyStores);
 
-router.patch("/:id",
-    auth(UserRole.MERCHANT),
-    validationRequest(storeValidation.updateStoreZodSchema),
-    storeController.updateStore
-)
+//update store
+router.patch(
+  "/:id",
+  auth(UserRole.MERCHANT),
+  validationRequest(storeValidation.updateStoreZodSchema),
+  storeController.updateStore,
+);
+//get single store by id
+router.get("/:id", auth(UserRole.MERCHANT), storeController.getStoreById);
 
 export const storeRoutes = router;

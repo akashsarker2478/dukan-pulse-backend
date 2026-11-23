@@ -46,11 +46,15 @@
 
 ### **Store Management (`/api/v1/stores`)**
 - `POST /api/v1/stores` - Submit a new store creation request (`status: PENDING`) *(Merchant only)*
+
 - `GET /api/v1/stores/my` - Retrieve logged-in merchant's stores with optional status filtering (`?status=PENDING|ACTIVE|BLOCKED`) *(Merchant only)*
 - `PATCH /api/v1/stores/:id` - Update store settings (`name`, `address`, `phone`, `logo`, `vatRate`) with ownership check *(Merchant only)*
 
+- `GET /api/v1/stores/:id` - Retrieve a single store's details by ID with ownership verification *(Merchant only)*
+
 ### **Admin Moderation (`/api/v1/admin`)**
 - `GET /api/v1/admin/merchants` - Retrieve all merchants with optional status filtering (`?status=PENDING|ACTIVE|BLOCKED`) *(Super Admin only)*
+
 - `PATCH /api/v1/admin/merchants/:id/status` - Approve (`ACTIVE`) or block (`BLOCKED`) a merchant and synchronize their store status *(Super Admin only)*
 ## 📂 Project Structure
 

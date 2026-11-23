@@ -46,9 +46,22 @@ const updateStore = catchAsync(async(req: Request, res: Response)=>{
     })
 })
 
+const getStoreById = catchAsync(async(req: Request, res: Response)=>{
+  const userId = req.user?.id as string;
+  const storeId = req.params.id as string;
+  const result = await storeService.getSingleStoreIntoDB(storeId,userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Store retrieved successfully.",
+    data: result,
+  });
+})
+
 export const storeController = {
   createStore,
   getMyStores,
-  updateStore
+  updateStore,
+  getStoreById,
 };
 
