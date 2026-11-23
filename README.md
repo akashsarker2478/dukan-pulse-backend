@@ -56,6 +56,11 @@
 - `GET /api/v1/admin/merchants` - Retrieve all merchants with optional status filtering (`?status=PENDING|ACTIVE|BLOCKED`) *(Super Admin only)*
 
 - `PATCH /api/v1/admin/merchants/:id/status` - Approve (`ACTIVE`) or block (`BLOCKED`) a merchant and synchronize their store status *(Super Admin only)*
+
+- `GET /api/v1/admin/stores` - Retrieve all stores with optional status filtering (`?status=PENDING|ACTIVE|BLOCKED`) and owner details *(Super Admin only)*
+
+- `PATCH /api/v1/admin/stores/:id/status` - Update store status to `ACTIVE` or `BLOCKED` (requires owner to be `ACTIVE` when activating) and return `previousStatus` *(Super Admin only)*
+
 ## 📂 Project Structure
 
 ```text

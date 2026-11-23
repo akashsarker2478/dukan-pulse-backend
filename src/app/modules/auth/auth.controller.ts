@@ -6,6 +6,7 @@ import httpStatus from "http-status";
 import config from "../../../config";
 import { clearAuthCookies, setAuthCookies } from "../../../shared/cookie";
 import ApiError from "../../../shared/apiError";
+import { UserRole } from "../../../../generated/prisma/enums";
 
 const registerMerchant = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.registerMerchantIntoDB(req.body);
@@ -24,17 +25,18 @@ const loginMerchant = catchAsync(async (req: Request, res: Response) => {
   const { accessToken, refreshToken, user } = result;
 
   setAuthCookies(res, { accessToken, refreshToken });
-
+  const roleLabel = user?.role === UserRole.SUPER_ADMIN?"Super Admin" : "Merchant";
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Merchant logged in successfully!",
+    message: `${roleLabel} logged in successfully!`,
     data: {
       user,
       accessToken,
     },
   });
 });
+
 
 const getMe = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
