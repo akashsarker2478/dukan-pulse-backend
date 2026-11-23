@@ -3,7 +3,6 @@ import { catchAsync } from "../../../shared/catchAsync";
 import { authService } from "./auth.service";
 import { sendResponse } from "../../../shared/sendResponse";
 import httpStatus from "http-status";
-import config from "../../../config";
 import { clearAuthCookies, setAuthCookies } from "../../../shared/cookie";
 import ApiError from "../../../shared/apiError";
 import { UserRole } from "../../../../generated/prisma/enums";
