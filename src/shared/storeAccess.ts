@@ -26,7 +26,7 @@ export const assertStoreAccessible = async (storeId: string) => {
 
 // Full check for store-scoped APIs: store exists, user belongs to it, store and owner are ACTIVE.
 export const checkStoreAccess = async(storeId: string,
-  user:{id:string, role: UserRole, storeId: string | null})=>{
+  user:{id:string, role: UserRole, storeId?: string | null})=>{
     const store = await prisma.store.findUnique({
       where:{id : storeId},
       include:{owner:{select :{status : true } } }

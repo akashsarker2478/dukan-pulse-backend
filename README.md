@@ -61,6 +61,10 @@
 
 - `PATCH /api/v1/admin/stores/:id/status` - Update store status to `ACTIVE` or `BLOCKED` (requires owner to be `ACTIVE` when activating) and return `previousStatus` *(Super Admin only)*
 
+### **Category Management (`/api/v1/stores/:storeId/categories`)**
+- `POST /api/v1/stores/:storeId/categories` - Create a new category within a store with unique name check per store (`@@unique([storeId, name])`) and active store/user access verification *(Merchant or Staff)*
+- `GET /api/v1/stores/:storeId/categories` - Retrieve all categories belonging to a specific store with store access and active status verification *(Merchant or Staff)*
+
 ## 📂 Project Structure
 
 ```text
