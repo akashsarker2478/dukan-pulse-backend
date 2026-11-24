@@ -20,4 +20,14 @@ router.get(
   categoryController.getCategories,
 );
 
+router.patch("/:categoryId",
+  auth(UserRole.MERCHANT, UserRole.STAFF),
+  validationRequest(categoryValidation.updateCategoryZodSchema),
+  categoryController.updateCategory
+)
+router.delete("/:categoryId",
+  auth(UserRole.MERCHANT, UserRole.STAFF),
+  categoryController.deleteCategory
+)
+
 export const categoryRoutes = router;

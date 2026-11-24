@@ -63,7 +63,12 @@
 
 ### **Category Management (`/api/v1/stores/:storeId/categories`)**
 - `POST /api/v1/stores/:storeId/categories` - Create a new category within a store with unique name check per store (`@@unique([storeId, name])`) and active store/user access verification *(Merchant or Staff)*
+
 - `GET /api/v1/stores/:storeId/categories` - Retrieve all categories belonging to a specific store with store access and active status verification *(Merchant or Staff)*
+
+- `PATCH /api/v1/stores/:storeId/categories/:categoryId`- Update a category's name within a store after verifying store access, category existence, and duplicate name check *(Merchant or Staff)*
+
+- `DELETE /api/v1/stores/:storeId/categories/:categoryId`- Delete a category from a store after store access and existence checks *(Merchant or Staff)*
 
 ## 📂 Project Structure
 
