@@ -79,6 +79,7 @@
 
 - `PATCH /api/v1/stores/:storeId/products/:productId` - Update product details with store-scoped category and unique SKU validation, `sellPrice >= buyPrice` check, and `buyPrice` restriction for `STAFF` *(Merchant & Staff)*
 
+- `DELETE /api/v1/stores/:storeId/products/:productId` - Soft-delete a store product by setting `isActive` to `false` *(Merchant only)*
 ## 📂 Project Structure
 
 ```text
