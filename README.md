@@ -70,6 +70,11 @@
 
 - `DELETE /api/v1/stores/:storeId/categories/:categoryId`- Delete a category from a store after store access and existence checks *(Merchant or Staff)*
 
+### **Product Management (`/api/v1/stores/:storeId/products`)**
+- `POST /api/v1/stores/:storeId/products` - Create a new product under a store with category validation and store-scoped unique SKU check *(Merchant & Staff)*
+
+- `GET /api/v1/stores/:storeId/products` - Retrieve store products with pagination (`?page=1&limit=10`), search (`?search=`), and category filtering (`?categoryId=`), masking `buyPrice` and inactive items for `STAFF` *(Merchant & Staff)*
+
 ## 📂 Project Structure
 
 ```text
