@@ -75,6 +75,10 @@
 
 - `GET /api/v1/stores/:storeId/products` - Retrieve store products with pagination (`?page=1&limit=10`), search (`?search=`), and category filtering (`?categoryId=`), masking `buyPrice` and inactive items for `STAFF` *(Merchant & Staff)*
 
+- `GET /api/v1/stores/:storeId/products/:productId` - Retrieve a single store-scoped product with category details, masking `buyPrice` and inactive items for `STAFF` *(Merchant & Staff)*
+
+- `PATCH /api/v1/stores/:storeId/products/:productId` - Update product details with store-scoped category and unique SKU validation, `sellPrice >= buyPrice` check, and `buyPrice` restriction for `STAFF` *(Merchant & Staff)*
+
 ## 📂 Project Structure
 
 ```text

@@ -20,4 +20,17 @@ router.get(
   productController.getProduct,
 );
 
+router.get(
+  "/:productId",
+  auth(UserRole.MERCHANT, UserRole.STAFF),
+  productController.getSingleProduct,
+);
+
+router.patch(
+  "/:productId",
+  auth(UserRole.MERCHANT, UserRole.STAFF),
+  validationRequest(productValidation.updateProductZodSchema),
+  productController.updateProduct,
+)
+
 export const productRoutes = router;

@@ -37,13 +37,45 @@ const getProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateProduct = catchAsync(async (req: Request, res: Response) => {});
+const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
+    const storeId = req.params.storeId as string;
+    const productId = req.params.productId as string;
+    const user = req.user as IAuthUser;
+    const result = await productService.getSingleProductFromDB(storeId,productId,user);
+    sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Product retrieved successfully!",
+    data: result,
+  });
+});
+
+const updateProduct = catchAsync(async (req: Request, res: Response) => {
+    const storeId = req.params.storeId as string;
+    const payload = req.body;
+    const productId = req.params.productId as string;
+    const user = req.user as IAuthUser;
+    const result = await productService.updateProductIntoDB(
+    storeId,
+    productId,
+    payload,
+    user,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Product updated successfully!",
+    data: result,
+  });
+});
 
 const deleteProduct = catchAsync(async (req: Request, res: Response) => {});
 
 export const productController = {
   createProduct,
   getProduct,
+  getSingleProduct,
   updateProduct,
   deleteProduct,
 };
